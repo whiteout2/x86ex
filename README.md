@@ -3,7 +3,7 @@
 - shows Intel x86 instructions in side bar
 - custom activity bar icon [x86] and keybinding (shift+cmd+i)
 - based on tree-view-sample
-- parses and references the Intel PDF docs using pdf2htmlEX
+- parses and references the Intel manual using [pdf2htmlEX](https://github.com/coolwanglu/pdf2htmlEX)
 <br>
 
 
