@@ -100,11 +100,11 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 			// case 3: return deps.slice(this.getIndex('GETSEC[CAPABILITIES]'), this.getIndex('GETSEC[WAKEUP]')+1);
 			// case 4: return deps.slice(this.getIndex('INVEPT'), this.getIndex('VMXON')+1);
 			// case 5: return deps.slice(this.getIndex('PREFETCHWT1'), this.getIndex('VSCATTERPF1QPS')+1);
-			case 1: return deps.slice(this.getIndex('ADC'), this.getIndex('YIELD')+1);
-			case 2: return deps.slice(this.getIndex('ADD (vector)')-1, this.getIndex('ZIP2')+1);
-			case 3: return deps.slice(this.getIndex('ADCLB')-1, this.getIndex('ZIP1, ZIP2 (vectors)')+1);
-			case 4: return deps.slice(this.getIndex('ADDHA'), this.getIndex('ZERO')+1);
-		
+			case 1: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
+			case 2: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
+			case 3: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
+			case 4: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
+			case 5: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
 		}
 
 
@@ -201,7 +201,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 
 				// TEST: reading html and writing to file for use in previewHtml
 				// OK works!
-				var myExtDir = vscode.extensions.getExtension ("whiteout2.arm64").extensionPath;
+				var myExtDir = vscode.extensions.getExtension ("whiteout2.x86ex").extensionPath;
 				//fs.writeFileSync('/Users/RG/Documents/comp/whiteout2/tree-view-sample-x86/x86/index.html', body);
 				// FUCK: the entire parse fails if we do not have the /arm directory in our
 				// extension. Let's do a check here too.
@@ -297,10 +297,10 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		// Of course we will disable the x86 stuff later.
 		found_td = false;
 		column = 1;
-		var myExtDir = vscode.extensions.getExtension ("whiteout2.arm64").extensionPath;
+		var myExtDir = vscode.extensions.getExtension ("whiteout2.x86ex").extensionPath;
 
 		//fs.readFile(myExtDir + '/arm/xhtml_a64/index.html', 'utf8', function(err, data) {
-		fs.readFile(myExtDir + '/arm/xhtml_a64/' + filename, 'utf8', function(err, data) {
+		fs.readFile(myExtDir + '/intel/html_x86/' + filename, 'utf8', function(err, data) {
 			if (err) throw err;
 			// DAMN: cannot use a variable like this: if we leave the scope body3 will be empty
 			// It is the callback shit again.
@@ -317,12 +317,12 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 			var htmlparser = require("htmlparser2");
 			var parser = new htmlparser.Parser({
 				onopentag: function (name, attribs) {
-					if (name === "span") {  // && attribs.type === "text/javascript") {
+					if (name === "td") {  // && attribs.type === "text/javascript") {
 						//console.log("TD! Hooray!");
 						found_td = true;
 					}
 					if (name === "a" && found_td) {
-						//console.log("link:", attribs.href);
+						console.log("link:", attribs.href);
 						link = attribs.href;
 						//link = link.slice(2, link.length);
 					}
@@ -333,14 +333,15 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 				ontext: function (text) {
 					//console.log("-->", text);
 					if (found_td && column == 1) {
-						//console.log("mnemonic:", text);
+						console.log("mnemonic:", text);
 						//if (text.indexOf('CLASTA (SIMD') != -1)
 						//	console.log("-->", text); // text cut off at &amp;
 						mnemonic = text;
 						column = 2;
+						found_td = false;
 					} else
 					if (found_td && column == 2) {
-						// stich mnemonic
+						// stich mnemonic not necessary
 						// TEST:
 						//if (mnemonic.indexOf('CLASTA (SIMD') != -1)
 						//	console.log("-->", text);
@@ -354,7 +355,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 						// NOTE: it is probably better to stich until </a> but no menemoic uses a ':'
 						// so we can use that, or otherwise use ':  ' as end of mnemonic indicator.
 						// TODO: do the same stich for summary
-						if (text.indexOf(':') == -1) {
+						/*if (text.indexOf(':') == -1) {
 							//console.log("-->", text);
 							mnemonic += text;
 						} else {
@@ -363,12 +364,20 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 							column = 3;
 							// strip clean
 							summary = summary.slice(10, summary.length);
-						}
+						}*/
+
+						// TODO: summary stich & for F2XM1, FYL2X etc.
+						// DONE
+						// TODO: make super/subscript look OK in item text
+						console.log("summary:", text);
+						summary = text;
+						column = 3;
+						//found_td = false;
 					} else
 					if (found_td && column == 3) {
 						// stich summary
 						// TEST:
-						if (mnemonic.indexOf('CLASTA (SIMD') != -1)
+						if (mnemonic.indexOf('F2XM1') != -1)
 							console.log("-->", text);
 						//////	
 						// NOTE: Tricky: what if there is no '.'? Or more than one?
@@ -383,30 +392,42 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 							//summary = summary.replace('\n', '');
 							//summary = summary.slice(10, summary.length);
 							// TEST:
-							if (mnemonic.indexOf('CLASTA (SIMD') != -1)
+							if (mnemonic.indexOf('F2XM1') != -1)
 								console.log("summary:", summary);					
 						//}
 					}
 				},
 				onclosetag: function (tagname) {
-					if (tagname === "span") {
+					if (tagname === "td") {
 						//console.log("That's it?!");
 						found_td = false;
-						column = 1;
+						//column = 1;
 
-						// Add found mnemonic-summary to array
-						// HELL: The array gets never filled
-						// It's like all variables are deleted once we go out of request.get() scope
-						// NONO: It gets filled OK. You can see it in Debug with a breakpoint on deps.push()
-						// It is just that we lose all variables once we go out of scope
-						var dep = new Dependency(mnemonic, summary, vscode.TreeItemCollapsibleState.None, {
-							command: 'extension.openPackageOnNpm',
-							title: '',
-							arguments: [mnemonic, link]
-						});
+						if (column == 3) {
+							column = 1;
+							// catch exeptions
+							// clean up fucky summary
+							if (mnemonic == 'F2XM1')
+								summary = 'Compute 2ˣ-1';
+							if (mnemonic == 'FYL2X') 
+								summary = 'Compute y * log₂x';
+							if (mnemonic == 'FYL2XP1') 
+								summary = 'Compute y * log₂(x +1)';
+							// Add found mnemonic-summary to array
+							// HELL: The array gets never filled
+							// It's like all variables are deleted once we go out of request.get() scope
+							// NONO: It gets filled OK. You can see it in Debug with a breakpoint on deps.push()
+							// It is just that we lose all variables once we go out of scope
+							var dep = new Dependency(mnemonic, summary, vscode.TreeItemCollapsibleState.None, {
+								command: 'extension.openPackageOnNpm',
+								title: '',
+								arguments: [mnemonic, link]
+							});
 
-						// And push
-						deps.push(dep);
+							// And push
+							deps.push(dep);
+						}
+
 					}
 				}
 			}, { decodeEntities: true });
@@ -414,7 +435,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 			parser.end();
 			
 			// End parse
-			console.log("Parse ARM end:", filename);
+			console.log("Parse Intel end:", filename);
 
 			// Trigger a refresh of the 5 views
 			vscode.commands.executeCommand('nodeDependencies1.refreshEntry');

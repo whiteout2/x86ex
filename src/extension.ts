@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import * as path from 'path';
+//import * as path from 'path';
 
 import { DepNodeProvider } from './nodeDependencies'
 import { JsonOutlineProvider } from './jsonOutline'
@@ -14,16 +14,16 @@ export function activate(context: vscode.ExtensionContext) {
 	const foo = new DepNodeProvider(rootPath, 0);
 	//foo.parseHTMLFile();
 	foo.parseHTMLFile('index.html');
-	foo.parseHTMLFile('fpsimdindex.html');
-	foo.parseHTMLFile('sveindex.html');
-	foo.parseHTMLFile('mortlachindex.html');
+	//foo.parseHTMLFile('fpsimdindex.html');
+	//foo.parseHTMLFile('sveindex.html');
+	//foo.parseHTMLFile('mortlachindex.html');
 
 	//const nodeDependenciesProvider = new DepNodeProvider(rootPath);
 	const nodeDependenciesProvider1 = new DepNodeProvider(rootPath, 1);
 	const nodeDependenciesProvider2 = new DepNodeProvider(rootPath, 2);
 	const nodeDependenciesProvider3 = new DepNodeProvider(rootPath, 3);
 	const nodeDependenciesProvider4 = new DepNodeProvider(rootPath, 4);
-	//const nodeDependenciesProvider5 = new DepNodeProvider(rootPath, 5);
+	const nodeDependenciesProvider5 = new DepNodeProvider(rootPath, 5);
 	const jsonOutlineProvider = new JsonOutlineProvider(context);
 
 	//vscode.window.registerTreeDataProvider('nodeDependencies', nodeDependenciesProvider);
@@ -31,28 +31,28 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider('nodeDependencies2', nodeDependenciesProvider2);
 	vscode.window.registerTreeDataProvider('nodeDependencies3', nodeDependenciesProvider3);
 	vscode.window.registerTreeDataProvider('nodeDependencies4', nodeDependenciesProvider4);
-	//vscode.window.registerTreeDataProvider('nodeDependencies5', nodeDependenciesProvider5);
+	vscode.window.registerTreeDataProvider('nodeDependencies5', nodeDependenciesProvider5);
 	
 	//vscode.commands.registerCommand('nodeDependencies.refreshEntry', () => nodeDependenciesProvider.refresh());
 	vscode.commands.registerCommand('nodeDependencies1.refreshEntry', () => nodeDependenciesProvider1.refresh());
 	vscode.commands.registerCommand('nodeDependencies2.refreshEntry', () => nodeDependenciesProvider2.refresh());
 	vscode.commands.registerCommand('nodeDependencies3.refreshEntry', () => nodeDependenciesProvider3.refresh());
 	vscode.commands.registerCommand('nodeDependencies4.refreshEntry', () => nodeDependenciesProvider4.refresh());
-	//vscode.commands.registerCommand('nodeDependencies5.refreshEntry', () => nodeDependenciesProvider5.refresh());
+	vscode.commands.registerCommand('nodeDependencies5.refreshEntry', () => nodeDependenciesProvider5.refresh());
 
 
 	vscode.commands.registerCommand('nodeDependencies1.addEntry', node => vscode.window.showInformationMessage('Successfully called add entry'));
 	vscode.commands.registerCommand('nodeDependencies2.addEntry', node => vscode.window.showInformationMessage('Successfully called add entry'));
 	vscode.commands.registerCommand('nodeDependencies3.addEntry', node => vscode.window.showInformationMessage('Successfully called add entry'));
 	vscode.commands.registerCommand('nodeDependencies4.addEntry', node => vscode.window.showInformationMessage('Successfully called add entry'));
-	//vscode.commands.registerCommand('nodeDependencies5.addEntry', node => vscode.window.showInformationMessage('Successfully called add entry'));
+	vscode.commands.registerCommand('nodeDependencies5.addEntry', node => vscode.window.showInformationMessage('Successfully called add entry'));
 
 
 	vscode.commands.registerCommand('nodeDependencies1.deleteEntry', node => vscode.window.showInformationMessage('Successfully called delete entry'));
 	vscode.commands.registerCommand('nodeDependencies2.deleteEntry', node => vscode.window.showInformationMessage('Successfully called delete entry'));
 	vscode.commands.registerCommand('nodeDependencies3.deleteEntry', node => vscode.window.showInformationMessage('Successfully called delete entry'));
 	vscode.commands.registerCommand('nodeDependencies4.deleteEntry', node => vscode.window.showInformationMessage('Successfully called delete entry'));
-	//vscode.commands.registerCommand('nodeDependencies5.deleteEntry', node => vscode.window.showInformationMessage('Successfully called delete entry'));
+	vscode.commands.registerCommand('nodeDependencies5.deleteEntry', node => vscode.window.showInformationMessage('Successfully called delete entry'));
 
 
 	// This opens mnemonic documentation in a browser
@@ -92,7 +92,7 @@ function viewInstruction(moduleName, moduleLink)
 	// - Check if file is already in /x86 cache to skip the download (not really necessary)
 	// - Get rid of hardcoded /Users/RG/Documents/comp/whiteout2/tree-view-sample-x86/
 	
-	var myExtDir = vscode.extensions.getExtension ("whiteout2.arm64").extensionPath;
+	var myExtDir = vscode.extensions.getExtension ("whiteout2.x86ex").extensionPath;
 /* 					
 	var request = require('request');
 	request.get(`https://www.felixcloutier.com/x86/${moduleLink}`, function (error, response, body) {
@@ -148,9 +148,12 @@ function viewInstruction(moduleName, moduleLink)
 			// And also hack off page headers and footers
 			// NOTE: inline css works
 			// TODO: use the original style sheet.
+			// SHIT: we had moduleName.toUpper() fucking up the entire fs.readFile()
 			var body3 = '';
+			//var filename = myExtDir + '/intel/html_x86/' + moduleName + '.html';
 			//fs.readFile(myExtDir + '/arm/xhtml_a64/adc.html', 'utf8', function(err, data) {
-			fs.readFile(myExtDir + '/arm/xhtml_a64/' + moduleLink, 'utf8', function(err, data) {
+			//fs.readFile(myExtDir + '/arm/xhtml_a64/' + moduleLink, 'utf8', function(err, data) {
+			fs.readFile(myExtDir + '/intel/html_x86/' + moduleLink, 'utf8', function(err, data) {	
 				if (err) throw err;
 				// DAMN: cannot use a variable like this: if we leave the scope body3 will be empty
 				// It is the callback shit again.
@@ -164,6 +167,7 @@ function viewInstruction(moduleName, moduleLink)
 				//const styleSrc = vscode.Uri.file(myExtDir + '/arm/xhtml_a64/insn.css').with({ scheme: 'vscode-resource' })
 				//const styleSrc = vscode.Uri.file(path.join(vscode.context.extensionPath, '/path/to/dir/of/theme.css')).with({ scheme: 'vscode-resource' })
 
+				/*
 				//const onDiskPath = vscode.Uri.file('/Users/rg/Documents/comp/whiteout2/arm/arm/xhtml_a64/insn.css')
 				const onDiskPath = vscode.Uri.file(myExtDir + '/arm/xhtml_a64/insn_hacked.css')
 				const styleSrc = panel.webview.asWebviewUri(onDiskPath)
@@ -172,7 +176,10 @@ function viewInstruction(moduleName, moduleLink)
 				body3 = body3.replace('insn.css', styleSrc.toString());
 				console.log(body3)				
 				//body3 = body3.replace('<head>', '<head><meta http-equiv="Content-Security-Policy" content="default-src none; img-src vscode-resource: https:; script-src vscode-resource:; style-src vscode-resource:;">');
-				
+				*/
+
+				body3 = body3.replace('<div id="sidebar">\n<div id="outline">\n</div>\n</div>', '<!--RG-->');
+				console.log(body3)
 
 
 				
@@ -184,7 +191,7 @@ function viewInstruction(moduleName, moduleLink)
 				// nasties
 				// TODO: use regex to catch em all
 				// DONE: makes coloring more consistent (but also more black alas)
-				body3 = body3.replace(/<a id=\"\w+\"\/>/g, '');
+				//body3 = body3.replace(/<a id=\"\w+\"\/>/g, '');
 				/*
 				body3 = body3.replace('<a id="execute"/>', '');
 				body3 = body3.replace('<a id="iclass_general"/>', '');
@@ -219,11 +226,11 @@ function viewInstruction(moduleName, moduleLink)
 			
 				
 				// cut header
-				body3 = body3.replace('<body>', '<body><!--');
-				body3 = body3.replace('</table><hr/>', '</table><hr/>-->');
+				//body3 = body3.replace('<body>', '<body><!--');
+				//body3 = body3.replace('</table><hr/>', '</table><hr/>-->');
 				// cut footer
-				body3 = body3.replace('<hr/><table style="margin: 0 auto;">', '<!--<hr/><table style="margin: 0 auto;">');
-				body3 = body3.replace('</body>', '--></body>');
+				//body3 = body3.replace('<hr/><table style="margin: 0 auto;">', '<!--<hr/><table style="margin: 0 auto;">');
+				//body3 = body3.replace('</body>', '--></body>');
 				
 				//console.log(body3);
 				panel.webview.html = body3;
