@@ -7,7 +7,7 @@
 <br>
 
 
-![Image of x86ex extension](https://raw.githubusercontent.com/whiteout2/x86ex/main/media/x86_screenshot2.png?token=AJK64II64UYI7TJVCC7MXWLBV6AAE)
+![Image of x86ex extension](https://raw.githubusercontent.com/whiteout2/x86ex/main/media/x86ex_screenshot.png)
 
 
 <!-- # Custom tree view samples

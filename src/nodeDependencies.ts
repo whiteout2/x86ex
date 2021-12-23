@@ -94,17 +94,11 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		// Better use 4 different deps. But it seems to work. Just make sure not to slice from
 		// index 0 for case 1 because order is not guaranteed.
 		switch (this.view) {
-			// case 1: return deps.slice(0, this.getIndex('XTEST')+1);
-			// //case 2: return deps.slice(this.getIndex('EACCEPT'), this.getIndex('EWB')+1);
-			// case 2: return deps.slice(this.getIndex('ENCLS'), this.getIndex('ENCLV[ESETCONTEXT]')+1);
-			// case 3: return deps.slice(this.getIndex('GETSEC[CAPABILITIES]'), this.getIndex('GETSEC[WAKEUP]')+1);
-			// case 4: return deps.slice(this.getIndex('INVEPT'), this.getIndex('VMXON')+1);
-			// case 5: return deps.slice(this.getIndex('PREFETCHWT1'), this.getIndex('VSCATTERPF1QPS')+1);
 			case 1: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
-			case 2: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
-			case 3: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
-			case 4: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
-			case 5: return deps.slice(this.getIndex('AAA'), this.getIndex('XTEST')+1);
+			case 2: return deps.slice(this.getIndex('ENCLS'), this.getIndex('ESETCONTEXT')+1);
+			case 3: return deps.slice(this.getIndex('GETSEC[CAPABILITIES]'), this.getIndex('GETSEC[WAKEUP]')+1);
+			case 4: return deps.slice(this.getIndex('INVEPT'), this.getIndex('VMXON')+1);
+			case 5: return deps.slice(this.getIndex('PREFETCHWT1'), this.getIndex('VSCATTERPF1QPS')+1);
 		}
 
 
